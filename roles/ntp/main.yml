@@ -1,0 +1,30 @@
+---
+
+  - name: Install NTP for ubuntu
+    apt:
+      name:
+        - chrony
+      state: latest
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Editing the chrony file for ubuntu
+    copy:
+      dest: /etc/chrony/chrony.conf
+      content: |
+        server NTP_SERVER iburst
+        allow 10.0.0.0/24
+      mode: 0755
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Enabling the NTP for ubuntu
+    service:
+      name: chrony
+      enabled: yes
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Restarting the NTP for ubuntu
+    service:
+      name: chrony
+      state: restarted
+    when: ansible_distribution == "Ubuntu"

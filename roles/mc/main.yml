@@ -1,0 +1,45 @@
+---
+
+  - name: Install Memcached for ubuntu
+    apt:
+      name:
+        - memcached
+        - python3-memcache
+      state: latest
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Edit the memcached file for ubuntu
+    copy:
+      dest: /etc/memcached.conf
+      content: |
+        memcached_user = memcache
+        memcached_port = 11211
+        memcached_listen_ip = 127.0.0.1
+        memcached_connections = 1024
+        memcached_log_file = /var/log/memcached.log
+        memcached_log_verbosity = ""
+        memcached_max_item_size = 1m
+        memcached_threads = 4
+      mode: 0644
+      owner: root
+      group: root
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Stopping Memcached for ubuntu
+    service:
+      name: memcached
+      state: stopped
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Starting Memcached for ubuntu
+    service:
+      name: memcached
+      state: started
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Enabling Memcached for ubuntu
+    service:
+      name: memcached
+      enabled: yes
+    when: ansible_distribution == "Ubuntu"
