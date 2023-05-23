@@ -1,0 +1,26 @@
+---
+
+- hosts: all
+  become: true
+  pre_tasks:
+
+  - name: Install updates for Ubuntu
+    tags: always
+    apt:
+      update_cache: yes
+    changed_when: false
+    when: ansible_distribution == "Ubuntu"
+
+- hosts: controller
+  become: true
+  roles:
+    - sql
+    - mq
+    - ntp
+
+- hosts: computer
+  become: true
+  roles:
+    - ospack
+    - mc
+    - etcd
